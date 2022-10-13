@@ -1,4 +1,4 @@
-import { myCurry } from "./task1";
+import { myCurry } from "./task2";
 
 describe("function myCurry", () => {
   const func = (a, b, c, d, e) => a + b + c + d + e;
