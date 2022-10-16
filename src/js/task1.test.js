@@ -6,23 +6,29 @@ describe("function findMaxSet", () => {
   });
 
   it("sum works", () => {
-
     const items1 = [
       ["a", "b"],
       ["a", "c"],
-      ["d", "e"]
-    ]
+      ["d", "e"],
+    ];
 
     const items2 = [
-      ["q", "w", 'a'],
+      ["q", "w", "a"],
       ["a", "b"],
       ["a", "c"],
       ["q", "e"],
       ["q", "r"],
-    ]    
+    ];
 
     expect(findMaxSet(bildProcessMap(items1))).toEqual(["a", "b", "c"]);
-    expect(findMaxSet(bildProcessMap(items2))).toEqual(["a", "b", "c", "e", "q", "r", "w"]);
-
+    expect(findMaxSet(bildProcessMap(items2))).toEqual([
+      "a",
+      "b",
+      "c",
+      "e",
+      "q",
+      "r",
+      "w",
+    ]);
   });
 });

@@ -1,3 +1,3 @@
-import { main } from "./js/task1"
+import { main } from "./js/task1";
 
-main()
+main();
