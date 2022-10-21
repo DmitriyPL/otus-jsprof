@@ -50,6 +50,7 @@
     "jest": "^28.1.1",
     "jest-canvas-mock": "^2.4.0",
     "jest-environment-jsdom": "^28.1.1",
+    "jsdom": "^20.0.1",
     "lint-staged": "^13.0.2",
     "mini-css-extract-plugin": "^2.6.1",
     "node-sass": "^7.0.1",

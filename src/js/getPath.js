@@ -28,7 +28,7 @@ export function getPath(el){
                 }
             }
 
-            if (nth != 1){
+            if (nth > 1){
                 selector += `:nth-of-type(${nth})`;
             }
                 
