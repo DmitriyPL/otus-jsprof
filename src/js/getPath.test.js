@@ -11,14 +11,13 @@ describe("function getPath", () => {
   });
 
   it("getPath works", () => {
-
-    const arrEl = [...document.querySelectorAll("p")].filter(a => a.textContent.includes("Тест3"));
-    const testEl =  arrEl[0];
+    const arrEl = [...document.querySelectorAll("p")].filter((a) =>
+      a.textContent.includes("Тест3")
+    );
+    const testEl = arrEl[0];
     const finedPath = getPath(testEl);
     const elChek = document.querySelector(finedPath);
 
-    expect(elChek.toBe('<p>Тест3</p>'));
-
+    expect(elChek.toBe("<p>Тест3</p>"));
   });
 });
-

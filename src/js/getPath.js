@@ -1,43 +1,35 @@
+export function getPath(el) {
+  if (!(el instanceof Element)) return "";
 
-export function getPath(el){
-    
-    if (!(el instanceof Element))
-            return "";
+  const path = [];
 
-    const path = [];
+  while (el.localName != "html") {
+    let selector = el.localName;
 
-    while (el.localName != "html") {
+    if (el.id) {
+      selector += "#" + el.id;
+      path.unshift(selector);
 
-        const selector = el.localName;
-        
-        if (el.id) {
-            
-            selector += '#' + el.id;
-            path.unshift(selector);
-            
-            break;
+      break;
+    } else {
+      let sib = el;
+      let nth = 1;
 
-        } else {
-
-            let sib = el;
-            let nth = 1;
-
-            while (sib = sib.previousElementSibling) {
-                if (sib.localName == selector){
-                    nth++;
-                }
-            }
-
-            if (nth > 1){
-                selector += `:nth-of-type(${nth})`;
-            }
-                
+      while ((sib = sib.previousElementSibling)) {
+        if (sib.localName == selector) {
+          nth++;
         }
+      }
 
-        path.unshift(selector);
-
-        el = el.parentNode;
+      if (nth > 1) {
+        selector += `:nth-of-type(${nth})`;
+      }
     }
 
-    return path.join(" > ");
+    path.unshift(selector);
+
+    el = el.parentNode;
+  }
+
+  return path.join(" > ");
 }
