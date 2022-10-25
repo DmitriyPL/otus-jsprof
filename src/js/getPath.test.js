@@ -1,4 +1,38 @@
+import { getByText } from "@testing-library/dom";
 import { getPath } from "./getPath";
+
+function getExampleDOM() {
+  const myHTML = `
+  <html lang="en">
+  <body>
+      <main>
+          <div class="content-wrapper">
+              <section>
+                  <ol>
+                      <li>
+                          <p>Тест1</p>
+                      </li>
+                      <li>
+                          <p>Тест2</p>
+                      </li>
+                      <li>
+                          <p>Тест3</p>
+                      </li>
+                      <li>
+                          <p>Тест4</p>
+                      </li>
+                  </ol>
+              </section>
+          </div>
+      </main>
+  </body>
+  </html>`;
+
+  const div = document.createElement("div");
+  div.innerHTML = myHTML;
+
+  return div;
+}
 
 describe("function getPath", () => {
   it("getPath to be instance of Function", () => {
@@ -10,14 +44,13 @@ describe("function getPath", () => {
     expect(getPath(el)).toBe("");
   });
 
-  it("getPath works", () => {
-    const arrEl = [...document.querySelectorAll("p")].filter((a) =>
-      a.textContent.includes("Тест3")
-    );
-    const testEl = arrEl[0];
+  it("getPath works", async () => {
+    const container = getExampleDOM();
+    const testEl = getByText(container, "Тест3");
     const finedPath = getPath(testEl);
-    const elChek = document.querySelector(finedPath);
+    const elChek = container.querySelector(finedPath);
 
-    expect(elChek.toBe("<p>Тест3</p>"));
+    expect(elChek).toBe(testEl);
+    expect(container.querySelectorAll(finedPath).length).toBe(1);
   });
 });

@@ -3,7 +3,7 @@ export function getPath(el) {
 
   const path = [];
 
-  while (el.localName != "html") {
+  while (el != null && el.nodeType === Node.ELEMENT_NODE) {
     let selector = el.localName;
 
     if (el.id) {

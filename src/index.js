@@ -4,6 +4,8 @@ const arrEl = [...document.querySelectorAll("p")].filter((a) =>
   a.textContent.includes("Тест3")
 );
 
+console.log(arrEl);
+
 const testEl = arrEl[0];
 console.log(testEl);
 
