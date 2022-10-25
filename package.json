@@ -1,7 +1,7 @@
 {
-  "name": "blog",
+  "name": "otus-jsprof",
   "version": "1.0.0",
-  "description": "Game life",
+  "description": "Home works",
   "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server --open --config ./webpack.dev.conf.js",
@@ -16,12 +16,12 @@
   "author": "https://github.com/DmitriyPL",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DmitriyPL/otus-blog.git"
+    "url": "git+https://github.com/DmitriyPL/otus-jsprof.git"
   },
   "bugs": {
-    "url": "https://github.com/DmitriyPL/otus-blog/issues"
+    "url": "https://github.com/DmitriyPL/otus-jsprof/issues"
   },
-  "homepage": "https://github.com/DmitriyPL/otus-blog#readme",
+  "homepage": "https://github.com/DmitriyPL/otus-jsprof#readme",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.18.5",
