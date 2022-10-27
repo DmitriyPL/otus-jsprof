@@ -9,7 +9,7 @@
     "build": "webpack --config ./webpack.build.conf.js",
     "deploy:web": "npm run build && gh-pages -d dist",
     "deploy:coverage": "npm run test && gh-pages -d coverage/lcov-report",
-    "test": "jest --coverage",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "lint": "prettier --check . && eslint .",
     "lint:fix": "prettier --write . && eslint . --fix",
     "prepare": "husky install",
