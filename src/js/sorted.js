@@ -3,103 +3,112 @@ import fs from "fs";
 import { Liner } from "./liner.js";
 import EventEmitter from "events";
 
-export function mergeToFiles(arrFiles, resFile) {
+export function mergeToFiles(arrFiles, mainDir) {
   
-  const arrStreams = [];
-  const compareQueues = [];
+  return new Promise ( (resolve, reject) => {
 
-  arrFiles.forEach((filePath) => {
-    arrStreams.push([
-      fs.createReadStream(filePath),
-      new Liner({ objectMode: true }),
-    ]);
-    compareQueues.push([]);
-  });
+    const resFile = path.join(mainDir, 'sortedFile');
 
-  let worked = 0;
-  let waited = 0;
+    const arrStreams = [];
+    const compareQueues = [];
 
-  const restart = new EventEmitter();
-
-  restart.on("resumeStreams", () => {
-    arrStreams.forEach((streamCombo) => {
-      streamCombo[1].resume();
+    arrFiles.forEach((filePath) => {
+      arrStreams.push([
+        fs.createReadStream(filePath),
+        new Liner({ objectMode: true }),
+      ]);
+      compareQueues.push([]);
     });
-  });
 
-  const writer = fs.createWriteStream(resFile);
+    let worked = 0;
+    let waited = 0;
 
-  arrStreams.forEach((streamCombo) => {
-    
-    worked++;
+    const restart = new EventEmitter();
 
-    const currRS = streamCombo[0];
-    const currLiner = streamCombo[1];
+    restart.on("resumeStreams", () => {
+      arrStreams.forEach((streamCombo) => {
+        streamCombo[1].resume();
+      });
+    });
 
-    currRS.pipe(currLiner);
+    const writer = fs.createWriteStream(resFile);
 
-    currLiner.on("readable", function () {
+    arrStreams.forEach((streamCombo) => {
       
-      let line;
+      worked++;
 
-      while ((line = currLiner.read()) !== null) {
+      const currRS = streamCombo[0];
+      const currLiner = streamCombo[1];
+
+      currRS.pipe(currLiner);
+
+      currLiner.on("readable", function () {
         
-        compareQueues[waited].push(Number(line));
-        currLiner.pause();
+        let line;
 
-        waited++;
+        while ((line = currLiner.read()) !== null) {
+          
+          compareQueues[waited].push(Number(line));
+          currLiner.pause();
 
-        if (waited === worked) {
+          waited++;
 
-          let compareQueue1stFile = compareQueues[0];     
-          let compareQueue2ndFile = compareQueues[1];
+          if (waited === worked) {
 
-          let posQ1 = 0;
-          let posQ2 = 0;
+            let compareQueue1stFile = compareQueues[0];     
+            let compareQueue2ndFile = compareQueues[1];
 
-          do {
+            let posQ1 = 0;
+            let posQ2 = 0;
 
-            const elFrom1stFile = compareQueue1stFile[posQ1];
-            const elFrom2ndFile = compareQueue2ndFile[posQ2];
+            do {
 
-            if (elFrom1stFile <= elFrom2ndFile){
-              writer.write(elFrom1stFile.toString() + "\n");
-              posQ1++;
-            } else {
-              writer.write(elFrom2ndFile.toString() + "\n");
-              posQ2++;
-            }  
+              const elFrom1stFile = compareQueue1stFile[posQ1];
+              const elFrom2ndFile = compareQueue2ndFile[posQ2];
+
+              if (elFrom1stFile <= elFrom2ndFile){
+                writer.write(elFrom1stFile.toString() + "\n");
+                posQ1++;
+              } else {
+                writer.write(elFrom2ndFile.toString() + "\n");
+                posQ2++;
+              }  
 
 
-          } while (posQ1 < compareQueue1stFile.length && posQ2 < compareQueue2ndFile.length)
+            } while (posQ1 < compareQueue1stFile.length && posQ2 < compareQueue2ndFile.length)
 
-          compareQueues[0] = compareQueue1stFile.slice(posQ1);
-          compareQueues[1] = compareQueue2ndFile.slice(posQ2);
+            compareQueues[0] = compareQueue1stFile.slice(posQ1);
+            compareQueues[1] = compareQueue2ndFile.slice(posQ2);
 
-          waited = 0;
-          restart.emit("resumeStreams");
+            waited = 0;
+            restart.emit("resumeStreams");
+
+          }
+        }
+      });
+
+      currLiner.on("end", () => {
+        
+        --worked;
+
+        if (worked === 0) {      
+
+          compareQueues.forEach(queue => {
+            queue.forEach(el => {
+              writer.write(el.toString() + "\n");         
+            });             
+          });
+
+          resolve("Sorted done");
 
         }
-      }
-    });
 
-    currLiner.on("end", () => {
-      
-      --worked;
-
-      if (worked === 0) {      
-
-        compareQueues.forEach(queue => {
-          queue.forEach(el => {
-            writer.write(el.toString() + "\n");         
-          });             
-        });
-
-      }
+      });
 
     });
 
-  });
+  })
+  
 }
 
 // function  main() {
