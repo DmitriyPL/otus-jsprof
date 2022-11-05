@@ -5,45 +5,49 @@ function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function generateFile(filePath, size = 1048576) {
-  let writeStream = fs.createWriteStream(filePath);
+export function generateFile(dir, size = 1048576) {
+  
+  return new Promise( (resolve, reject) => {
 
-  let fileSize = 0;
+    const filePath = path.join(dir, "randomNumbers");
 
-  write();
+    let writeStream = fs.createWriteStream(filePath);
+  
+    let fileSize = 0;
+  
+    write();
 
-  function write() {
-    let ok = true;
+    function write() {
+    
+      let ok = true;
+  
+      do {
+        const num = randomIntFromInterval(1, 1000000).toString();
+        let lengthInBytes = new TextEncoder().encode(num + "\n").length;
+  
+        ok = writeStream.write(num + "\n");
+        if (ok) {
+          fileSize = fileSize + lengthInBytes;
 
-    do {
-      const num = randomIntFromInterval(1, 1000000).toString();
-      let lengthInBytes = new TextEncoder().encode(num + "\n").length;
+        }
 
-      let sep = "\n";
-
-      if (fileSize + lengthInBytes > size) {
-        sep = "";
-        lengthInBytes = lengthInBytes - new TextEncoder().encode("\n").length;
+      } while (ok && fileSize < size);
+  
+      if (fileSize < size) {
+        writeStream.once("drain", write);
+      }
+  
+      if (fileSize >= size) {
+        writeStream.close();        
+        resolve(filePath);
       }
 
-      ok = writeStream.write(num + sep);
-      if (ok) {
-        fileSize = fileSize + lengthInBytes;
-      }
-    } while (ok && fileSize < size);
-
-    if (fileSize < size) {
-      writeStream.once("drain", write);
     }
 
-    if (fileSize >= size) {
-      writeStream.close();
-      console.log(`File is done! File size is ${fileSize}`);
-    }
-  }
+  })
+
 }
 
-const mainDir = "C:\\OTUS\\";
-const FILEPATH = path.join(mainDir, "randomNumbers");
+// const mainDir = "C:\\OTUS\\";
 
-generateFile(FILEPATH, 104857600);
+// generateFile(mainDir, 104857600).then( path => console.log(path));

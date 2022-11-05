@@ -1,7 +1,9 @@
 import fs from "fs";
 import { Writable } from "stream";
+import { merge_sort } from "./mergesort.js";
 
 export class WriteToFiles extends Writable {
+  
   constructor(options) {
     super(options);
 
@@ -16,30 +18,29 @@ export class WriteToFiles extends Writable {
   }
 
   _write(chunk, _, done) {
-    let data = chunk.toString();
+
+    let data = Number(chunk);
     this.buffArr.push(data);
 
-    this.currentSize =
-      this.currentSize + new TextEncoder().encode(data + "\n").length;
+    this.currentSize = this.currentSize + new TextEncoder().encode(data + "\n").length;
 
     if (this.currentSize >= this.chunkSize) {
-      this.buffArr.sort((a, b) => {
-        return a - b;
-      });
+
+      this.buffArr = merge_sort(this.buffArr);
 
       // console.log('befor write', process.memoryUsage());
 
-      const currStream = fs.createWriteStream(
-        `${this.rootDir}\\chunk${this.streamID + 1}`
-      );
+      const currStream = fs.createWriteStream(`${this.rootDir}\\chunk${this.streamID + 1}`);
 
       this.buffArr.forEach((el, index) => {
+        
         let sep = "\n";
-        if (index === this.buffArr.length - 1) {
-          sep = "";
-        }
+        // if (index === this.buffArr.length - 1) {
+        //   sep = "";
+        // }
 
-        currStream.write(el + sep);
+        currStream.write(el.toString() + sep);
+
       });
 
       currStream.end();
@@ -54,8 +55,11 @@ export class WriteToFiles extends Writable {
       if (this.streamID === this.numberOfFiles - 1) {
         this.chunkSize = this.fileSizeInBytes - this.writed;
       }
+
     }
 
     done();
-  }
+
+  } 
+
 }
