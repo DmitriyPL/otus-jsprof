@@ -52,7 +52,7 @@ export function generateFile(dir, size) {
 
 }
 
-const dir = config.get("dir");
-const fileSize = config.get("fileSize");
+// const dir = config.get("dir");
+// const fileSize = config.get("fileSize");
 
-generateFile(dir, fileSize).then( path => console.log(path));
+// generateFile(dir, fileSize).then( path => console.log(path));

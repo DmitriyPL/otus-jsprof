@@ -19,23 +19,23 @@ try {
     }
 }
 
-// generateFile(dirPath, fileSize)
-//  .then( fpath => { 
-//     console.log(`Create file with random numbers in ${fpath}`);
-//     return splitByFiles(fpath, dirPath, numberChunks) } )
-//  .then( arrFiles => { 
-//     console.log(`Split file by ${numberChunks} chunks`);
-//     return mergeFiles(arrFiles, dirPath) })
-//  .then( res => console.log(res) )
-// .catch((err) => {
-//     console.error(err);
-// });
+generateFile(dirPath, fileSize)
+ .then( fpath => { 
+    console.log(`Create file with random numbers in ${fpath}`);
+    return splitByFiles(fpath, dirPath, numberChunks) } )
+ .then( arrFiles => { 
+    console.log(`Split file by ${numberChunks} chunks`);
+    return mergeFiles(arrFiles, dirPath) })
+ .then( res => console.log(res) )
+.catch((err) => {
+    console.error(err);
+});
 
 // const fpath = path.join(dir, 'randomNumbers');
 
 // console.log(fpath, dirPath);
 
-// splitByFiles(fpath, dir, numberChunks)
+// splitByFiles(fpath, dirPath, numberChunks)
 // .then( arrFiles => { 
 //    console.log(`Split file by ${numberChunks} chunks`);
 //    return mergeFiles(arrFiles, dirPath) })

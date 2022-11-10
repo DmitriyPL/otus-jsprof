@@ -17,8 +17,6 @@ export function splitByFiles(dataFile, rootDir, numberOfFiles) {
     const fileSizeInBytes = stats.size;
     let chunkSize = Math.round(fileSizeInBytes / numberOfFiles);
   
-    console.log(stats);
-
     const liner = new Liner({ objectMode: true, highWaterMark: 1 });
     const readStream = fs.createReadStream(path.join(path.join(),dataFile));
   
