@@ -12,7 +12,8 @@
     "test": "jest --coverage",
     "lint": "prettier --check . && eslint .",
     "lint:fix": "prettier --write . && eslint . --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "nd": "node ./src/js/main.js"
   },
   "author": "https://github.com/DmitriyPL",
   "repository": {
@@ -72,5 +73,8 @@
   "lint-staged": {
     "*.js": "eslint --fix",
     "*.{js,css,md}": "prettier --write"
+  },
+  "dependencies": {
+    "config": "^3.3.8"
   }
 }

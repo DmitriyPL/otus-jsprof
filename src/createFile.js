@@ -1,20 +1,24 @@
+import config from "config";
 import path from "path";
 import fs from "fs";
+
 
 function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-export function generateFile(dir, size = 1048576) {
+export function generateFile(dir, size) {
   
-  return new Promise( (resolve, reject) => {
-
+  return new Promise( (resolve, _) => {
+    
     const filePath = path.join(dir, "randomNumbers");
 
     let writeStream = fs.createWriteStream(filePath);
   
     let fileSize = 0;
-  
+    const from = config.get("from");
+    const to = config.get("to");
+
     write();
 
     function write() {
@@ -22,8 +26,8 @@ export function generateFile(dir, size = 1048576) {
       let ok = true;
   
       do {
-        const num = randomIntFromInterval(1, 1000000).toString();
-        let lengthInBytes = new TextEncoder().encode(num + "\n").length;
+        const num = randomIntFromInterval(from, to).toString();        
+        let lengthInBytes = Buffer.byteLength(num + "\n", 'utf8');
   
         ok = writeStream.write(num + "\n");
         if (ok) {
@@ -48,6 +52,7 @@ export function generateFile(dir, size = 1048576) {
 
 }
 
-// const mainDir = "C:\\OTUS\\";
+const dir = config.get("dir");
+const fileSize = config.get("fileSize");
 
-// generateFile(mainDir, 104857600).then( path => console.log(path));
+generateFile(dir, fileSize).then( path => console.log(path));
